@@ -30,7 +30,7 @@ class Blob {
         
         this.speed = {
             dx: 0,
-            dy: 10
+            dy: 0
         }
         
         this.type = type;
@@ -55,25 +55,21 @@ class Blob {
     update() {
         this.space.x += this.speed.dx;
         this.space.y += this.speed.dy;
+        this.speed.dy += 1
 
         // handle jump
         if (this.events.jumping.status == JUMPING_ASCEND) {
             if (this.speed.dy >= 0) {
                 this.events.jumping.status = JUMPING_DESCEND;
             }
-            else {
-                this.speed.dy += 9.8*0.1
-            }
         }
         else if (this.events.jumping.status == JUMPING_DESCEND) {
-            if (this.speed.dy >= this.events.jumping.speed) {
+            if (this.speed.dy >= 1.0125*this.events.jumping.speed) {
                 this.events.jumping.status = JUMPING_NOT;
                 this.speed.dy = 0;
             }
-            else {
-                this.speed.dy += 9.8*0.1
-            }
         }
+        
         this.modulo();
         this.draw();
     }
