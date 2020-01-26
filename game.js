@@ -7,13 +7,12 @@ let H = canvas.getBoundingClientRect().height;
 document.addEventListener('keydown', keyDownHandler);
 document.addEventListener('keyup', keyUpHandler);
 
-player = new Blob(BLOB_RECT, 0, 0, 10, 20, 'cyan');
+// player = new Blob(BLOB_RECT, 0, 0, 10, 20, 'cyan');
 player2 = new Blob(BLOB_CIRCLE, 40, 40, 20, 20, 'blue');
 
 function draw() {
     drawRect(0, 0, W, H, 'black');
-    drawText(100, 50, "Hello World", 'white');
-    player.update();
+    // player.update();
     player2.update();
 
     requestAnimationFrame(draw);
@@ -40,10 +39,10 @@ function drawText(topLeftX, topLeftY, msg, fillColor='black', fontSize='3em') {
 }
 
 function keyDownHandler(e) {
-    player.keyDownHandler(e);
+    // player.keyDownHandler(e);
     player2.keyDownHandler(e);
 }
 function keyUpHandler(e) {
-    player.keyUpHandler(e);
+    // player.keyUpHandler(e);
     player2.keyUpHandler(e);
 }
