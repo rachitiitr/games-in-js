@@ -1,6 +1,12 @@
 BLOB_CIRCLE = 'CIRCLE';
 BLOB_RECT = 'RECT';
 
+// Jumping event states
+JUMPING_NOT = 'JUMPING_NOT'
+JUMPING_ASCEND = 'JUMPING_ASCEND'
+JUMPING_DESCEND = 'JUMPING_DESCEND'
+
+
 function drawRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
     ctx.beginPath();
 
@@ -9,6 +15,7 @@ function drawRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
 
     ctx.closePath();
 }
+
 
 class Blob {
     constructor(type, x=W/2, y=H/2, w=20, h=20, color='black') {
@@ -23,12 +30,20 @@ class Blob {
         
         this.speed = {
             dx: 0,
-            dy: 0
+            dy: 10
         }
         
         this.type = type;
         if (this.type == BLOB_CIRCLE)
             this.space.rad = this.space.w
+
+        this.events = {
+            jumping: {
+                status: JUMPING_NOT,
+                threshold: 100,
+                current: 0
+            }
+        }
     }
 
     modulo() {
@@ -41,6 +56,29 @@ class Blob {
     update() {
         this.space.x += this.speed.dx;
         this.space.y += this.speed.dy;
+        if (this.events.jumping.status == JUMPING_ASCEND) {
+            if (this.speed.dy >= 0) {
+                this.events.jumping.status = JUMPING_DESCEND;
+                this.events.jumping.threshold = this.events.jumping.current;
+                this.events.jumping.current = 0;
+                this.speed.dy = 0;
+            }
+            else {
+                this.events.jumping.current += Math.abs(this.speed.dy);
+                this.speed.dy += 9.8*0.1
+            }
+        }
+        else if (this.events.jumping.status == JUMPING_DESCEND) {
+            if (this.events.jumping.current >= this.events.jumping.threshold) {
+                this.events.jumping.status = JUMPING_NOT;
+                this.events.jumping.current = 0;
+                this.speed.dy = 0;
+            }
+            else {
+                this.events.jumping.current += Math.abs(this.speed.dy);
+                this.speed.dy += 9.8*0.1
+            }
+        }
         this.modulo();
         this.draw();
     }
@@ -56,21 +94,29 @@ class Blob {
         let code = e.keyCode;
         switch (code) {
             case 37: this.speed.dx = -2; break; //Left key
-            case 38: this.speed.dy = -2; break; //Up key
+            // case 38: this.speed.dy = -2; break; //Up key
             case 39: this.speed.dx = 2; break; //Right key
-            case 40: this.speed.dy = 2; break; //Down key
-            case 32: this.speed.dy = -20; break; //Space key
+            // case 40: this.speed.dy = 2; break; //Down key
+            case 32: { //Space key
+                if (this.events.jumping.status != JUMPING_NOT)
+                    break;
+                this.events.jumping.status = JUMPING_ASCEND;
+                this.events.jumping.current = 0;
+                this.speed.dy = -20;
+                break; 
+            }
             default: console.log(code); //Everything else
         }
     }
+
     keyUpHandler(e) {
         let code = e.keyCode;
         switch (code) {
             case 37: this.speed.dx = 0; break; //Left key
-            case 38: this.speed.dy = 0; break; //Up key
+            // case 38: this.speed.dy = 0; break; //Up key
             case 39: this.speed.dx = 0; break; //Right key
-            case 40: this.speed.dy = 0; break; //Down key
-            case 32: this.speed.dy = 0; break; //Space key
+            // case 40: this.speed.dy = 0; break; //Down key
+            case 32: break; //Space key
             default: console.log(code); //Everything else
         }
     }
