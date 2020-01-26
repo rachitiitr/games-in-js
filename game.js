@@ -9,11 +9,14 @@ document.addEventListener('keyup', keyUpHandler);
 
 // player = new Blob(BLOB_RECT, 0, 0, 10, 20, 'cyan');
 player2 = new Blob(BLOB_CIRCLE, 40, 40, 20, 20, 'blue');
+ledge = new Ledge(10, 200, 200);
 
 function draw() {
     drawRect(0, 0, W, H, 'black');
     // player.update();
     player2.update();
+    ledge.update();
+    ledge.collide(player2);
 
     requestAnimationFrame(draw);
 }
