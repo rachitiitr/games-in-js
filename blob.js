@@ -50,6 +50,9 @@ class Blob {
         this.space.y = Math.min(this.space.y, H-this.space.h);
         this.space.x = Math.max(0, this.space.x);
         this.space.y = Math.max(0, this.space.y);
+
+        if(this.space.y + this.space.h == H) 
+            this.on_rest();
     }
 
     update() {
@@ -57,18 +60,6 @@ class Blob {
         this.space.y += this.speed.dy;
         this.speed.dy += 1
 
-        // handle jump
-        if (this.events.jumping.status == JUMPING_ASCEND) {
-            if (this.speed.dy >= 0) {
-                this.events.jumping.status = JUMPING_DESCEND;
-            }
-        }
-        else if (this.events.jumping.status == JUMPING_DESCEND) {
-            if (this.speed.dy >= 1.0125*this.events.jumping.speed) {
-                this.events.jumping.status = JUMPING_NOT;
-            }
-        }
-        
         this.modulo();
         this.draw();
     }
@@ -91,7 +82,6 @@ class Blob {
                 if (this.events.jumping.status != JUMPING_NOT)
                     break;
                 this.events.jumping.status = JUMPING_ASCEND;
-                this.events.jumping.current = 0;
                 this.speed.dy = -this.events.jumping.speed;
                 break; 
             }
@@ -109,5 +99,10 @@ class Blob {
             case 32: break; //Space key
             default: console.log(code); //Everything else
         }
+    }
+
+    on_rest() {
+        this.speed.dy = 0;
+        this.events.jumping.status = JUMPING_NOT;
     }
 }
