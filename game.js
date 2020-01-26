@@ -7,9 +7,11 @@ let H = canvas.getBoundingClientRect().height;
 document.addEventListener('keydown', keyDownHandler);
 document.addEventListener('keyup', keyUpHandler);
 
-// player = new Blob(BLOB_RECT, 0, 0, 10, 20, 'cyan');
+// player2 = new Blob(BLOB_RECT, 0, 0, 20, 20, 'cyan');
 player2 = new Blob(BLOB_CIRCLE, 40, 40, 20, 20, 'blue');
 ledge = new Ledge(10, 200, 200);
+ledge2 = new Ledge(15, 600, 250);
+
 
 function draw() {
     drawRect(0, 0, W, H, 'black');
@@ -17,13 +19,13 @@ function draw() {
     player2.update();
     ledge.update();
     ledge.collide(player2);
+    ledge2.update();
+    ledge2.collide(player2);
 
     requestAnimationFrame(draw);
 }
 
 draw();
-
-
 
 function drawCircle(centerX, centerY, radius, fillColor) {
     ctx.beginPath();
@@ -45,6 +47,7 @@ function keyDownHandler(e) {
     // player.keyDownHandler(e);
     player2.keyDownHandler(e);
 }
+
 function keyUpHandler(e) {
     // player.keyUpHandler(e);
     player2.keyUpHandler(e);
