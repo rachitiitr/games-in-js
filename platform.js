@@ -22,6 +22,9 @@ class Ledge {
                     player.events.jumping.status = JUMPING_NOT;
                     player.space.y = curY - player.space.h;
                 }
+                else if (diff < 0 && Math.abs(diff) <= this.rock.height) {
+                    player.speed.dy = 3;
+                }
             }
         }
     }
