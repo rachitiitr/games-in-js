@@ -8,7 +8,7 @@ class Ledge {
 
     update() {
         for(let i=0; i<this.n; i++)
-            ctx.drawImage(this.rock, this.space.x+32*i, this.space.y)
+            ctx.drawImage(this.rock, this.space.x+this.rock.width*i, this.space.y)
     }
 
     collide(player) {
@@ -17,8 +17,7 @@ class Ledge {
         if (curX <= player.space.x && player.space.x <= curX+ (this.rock.width*this.n)) {
             let diff =  curY - player.space.y;
             if(0 <= diff && diff <= player.space.h) {
-                player.speed.dy = 0;
-                player.events.jumping.status = JUMPING_NOT;
+                player.on_rest();
                 player.space.y = curY - player.space.h;
             }
             else if (diff < 0 && Math.abs(diff) <= this.rock.height && player.speed.dy <= 0) {
