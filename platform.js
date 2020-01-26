@@ -12,19 +12,17 @@ class Ledge {
     }
 
     collide(player) {
-        for(let i=0; i<this.n; i++) {
-            let curX = this.space.x+32*i;
-            let curY = this.space.y;
-            if (curX <= player.space.x && player.space.x <= curX+this.rock.width) {
-                let diff =  curY - player.space.y;
-                if(0 <= diff && diff < player.space.h) {
-                    player.speed.dy = 0;
-                    player.events.jumping.status = JUMPING_NOT;
-                    player.space.y = curY - player.space.h;
-                }
-                else if (diff < 0 && Math.abs(diff) <= this.rock.height) {
-                    player.speed.dy = 3;
-                }
+        let curX = this.space.x;
+        let curY = this.space.y;
+        if (curX <= player.space.x && player.space.x <= curX+ (this.rock.width*this.n)) {
+            let diff =  curY - player.space.y;
+            if(0 <= diff && diff <= player.space.h) {
+                player.speed.dy = 0;
+                player.events.jumping.status = JUMPING_NOT;
+                player.space.y = curY - player.space.h;
+            }
+            else if (diff < 0 && Math.abs(diff) <= this.rock.height && player.speed.dy <= 0) {
+                player.speed.dy = 3;
             }
         }
     }
