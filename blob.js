@@ -66,7 +66,6 @@ class Blob {
         else if (this.events.jumping.status == JUMPING_DESCEND) {
             if (this.speed.dy >= 1.0125*this.events.jumping.speed) {
                 this.events.jumping.status = JUMPING_NOT;
-                this.speed.dy = 0;
             }
         }
         
