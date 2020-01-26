@@ -40,8 +40,7 @@ class Blob {
         this.events = {
             jumping: {
                 status: JUMPING_NOT,
-                threshold: 100,
-                current: 0
+                speed: 20
             }
         }
     }
@@ -56,26 +55,22 @@ class Blob {
     update() {
         this.space.x += this.speed.dx;
         this.space.y += this.speed.dy;
+
+        // handle jump
         if (this.events.jumping.status == JUMPING_ASCEND) {
             if (this.speed.dy >= 0) {
                 this.events.jumping.status = JUMPING_DESCEND;
-                this.events.jumping.threshold = this.events.jumping.current;
-                this.events.jumping.current = 0;
-                this.speed.dy = 0;
             }
             else {
-                this.events.jumping.current += Math.abs(this.speed.dy);
                 this.speed.dy += 9.8*0.1
             }
         }
         else if (this.events.jumping.status == JUMPING_DESCEND) {
-            if (this.events.jumping.current >= this.events.jumping.threshold) {
+            if (this.speed.dy >= this.events.jumping.speed) {
                 this.events.jumping.status = JUMPING_NOT;
-                this.events.jumping.current = 0;
                 this.speed.dy = 0;
             }
             else {
-                this.events.jumping.current += Math.abs(this.speed.dy);
                 this.speed.dy += 9.8*0.1
             }
         }
@@ -93,16 +88,16 @@ class Blob {
     keyDownHandler(e) {
         let code = e.keyCode;
         switch (code) {
-            case 37: this.speed.dx = -2; break; //Left key
-            // case 38: this.speed.dy = -2; break; //Up key
-            case 39: this.speed.dx = 2; break; //Right key
-            // case 40: this.speed.dy = 2; break; //Down key
+            case 37: this.speed.dx = -10; break; //Left key
+            // case 38: this.speed.dy = -10; break; //Up key
+            case 39: this.speed.dx = 10; break; //Right key
+            // case 40: this.speed.dy = 10; break; //Down key
             case 32: { //Space key
                 if (this.events.jumping.status != JUMPING_NOT)
                     break;
                 this.events.jumping.status = JUMPING_ASCEND;
                 this.events.jumping.current = 0;
-                this.speed.dy = -20;
+                this.speed.dy = -this.events.jumping.speed;
                 break; 
             }
             default: console.log(code); //Everything else
